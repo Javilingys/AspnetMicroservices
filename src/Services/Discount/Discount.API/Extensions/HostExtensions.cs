@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Npgsql;
+using System;
 using System.Threading;
 
 namespace Discount.API.Extensions
@@ -22,6 +23,7 @@ namespace Discount.API.Extensions
                 try
                 {
                     logger.LogInformation("Migrating postgresql database.");
+                    logger.LogInformation(configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
                     using var connection = new NpgsqlConnection(configuration.GetValue<string>("DatabaseSettings:ConnectionString"));
                     connection.Open();
 
@@ -47,7 +49,7 @@ namespace Discount.API.Extensions
 
                     logger.LogInformation("Migrated postresql database.");
                 }
-                catch (NpgsqlException ex)
+                catch (Exception ex)
                 {
                     logger.LogError(ex, "An error occurred while migrating the postresql database");
 
